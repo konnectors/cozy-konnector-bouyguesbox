@@ -1,0 +1,46 @@
+{
+  "version": "0.0.1",
+  "name": "Bouygues Box",
+  "type": "node",
+  "slug": "bouyguesbox",
+  "description": "Get all the bill from Bouygues Box",
+  "source": "git://github.com/cozy/cozy-konnector-bouyguesbox.git",
+  "locales": {
+    "fr": {
+      "description": "Récupère toutes vos factures Bouygues Box",
+      "permissions": {
+        "bills": {
+          "description": "Utilisé pour sauvegarder les données de facturation"
+        },
+        "files": {
+          "description": "Utilisé pour sauvegarder les factures"
+        }
+      }
+    },
+    "en": {
+      "description": "Retrieves all your Bouygues Box invoices",
+      "permissions": {
+        "bills": {
+          "description": "Used to save billing data"
+        },
+        "files": {
+          "description": "Used to save invoices"
+        }
+      }
+    }
+  },
+  "permissions": {
+    "bills": {
+      "description": "Required to save the bills data",
+      "type": "io.cozy.bills"
+    },
+    "files": {
+      "description": "Required to save the bills",
+      "type": "io.cozy.files"
+    }
+  },
+  "developer": {
+    "name": "Olivier “lespacedunmatin” G., adapted from @doubleface work",
+    "url": "https://github.com/lespacedunmatin"
+  }
+}
