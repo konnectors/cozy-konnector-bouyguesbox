@@ -45,9 +45,9 @@ This command will register your konnector as an OAuth application to the cozy-st
 the cozy-stack is supposed to be located in http://cozy.tools:8080. If this is not your case, just
 update the COZY_URL field in [./data/env.js].
 
-After that, your konnector is running but should not work since you did not specify any credentials to 
-the target service. You can also do this in [./data/env.js] by modifying the COZY_FIELDS attribute 
-which is a JSON string, where 'phoneNumber' is you phone number for Bouygues Box and 
+After that, your konnector is running but should not work since you did not specify any credentials to
+the target service. You can also do this in [./data/env.js] by modifying the COZY_FIELDS attribute
+which is a JSON string, where 'login' is your bouygues email address and
 'folderPath' is the path where the pdf bills will be saved.
 
 Now run `npm run dev` one more time, it should be ok.
