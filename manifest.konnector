@@ -2,9 +2,20 @@
   "version": "0.0.1",
   "name": "Bouygues Box",
   "type": "node",
-  "slug": "bouyguesbox",
-  "description": "Get all the bill from Bouygues Box",
-  "source": "git://github.com/cozy/cozy-konnector-bouyguesbox.git",
+  "slug": "konnectorslug",
+  "description": "description",
+  "source": "git://github.com/cozy/cozy-konnector-thename.git",
+  "fields": {
+    "save_folder": {
+      "doctype": "io.cozy.files",
+      "type": "folder"
+    },
+    "account": {
+      "doctype": "io.cozy.accounts",
+      "account_type": "bouygues",
+      "accountFormat": "login,password"
+    }
+  },
   "locales": {
     "fr": {
       "description": "Récupère toutes vos factures Bouygues Box",
@@ -37,6 +48,11 @@
     "files": {
       "description": "Required to save the bills",
       "type": "io.cozy.files"
+    },
+    "accounts": {
+      "description": "Required to get the account's data",
+      "type": "io.cozy.accounts",
+      "verbs": ["GET"]
     }
   },
   "developer": {
