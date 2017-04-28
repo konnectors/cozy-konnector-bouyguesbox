@@ -1,12 +1,14 @@
 'use strict'
 
+/* global emit */
+
 const qs = require('querystring')
 const request = require('request')
 // require('request-debug')(request)
 const moment = require('moment')
 const cheerio = require('cheerio')
 
-const {fetcher, filterExisting, saveDataAndFile, models} = require('cozy-konnector-libs')
+const {baseKonnector, filterExisting, saveDataAndFile, models} = require('cozy-konnector-libs')
 const Bill = models.bill
 
 const log = require('printit')({
@@ -15,7 +17,7 @@ const log = require('printit')({
 })
 
 // Konnector
-module.exports = {
+module.exports = baseKonnector.createNew({
   name: 'Bouygues Box',
   slug: 'bouyguesbox',
   description: 'A connector to retrieve your Bouygues Box bills and billing data and save them into your Cozy. ',
@@ -37,24 +39,16 @@ module.exports = {
     return Bill.defineRequest('byDate', map, err => callback(err))
   },
 
-  fetch (requiredFields, callback) {
-    log.info('Import started')
-    return fetcher.new()
-      .use(logIn)
-      .use(parsePage)
-      .use(filterExisting(log, Bill))
-      .use(saveDataAndFile(log, Bill, 'bouyguesBox', ['facture']))
-      .args(requiredFields, {}, {})
-      .fetch(function (err, fields, entries) {
-        if (err) { return callback(err) }
-        log.info('Import finished')
-        return callback()
-      })
-  }
-}
+  fetchOperations: [
+    logIn,
+    parsePage,
+    customFilterExisting,
+    customSaveDataAndFile
+  ]
+})
 
 // Procedure to login to Bouygues website.
-var logIn = function (requiredFields, bills, data, next) {
+function logIn (requiredFields, bills, data, next) {
   const loginUrl = 'https://www.mon-compte.bouyguestelecom.fr/cas/login'
   const billUrl = 'https://www.bouyguestelecom.fr/parcours/mes-factures/historique'
   const userAgent = 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:36.0) ' +
@@ -134,7 +128,7 @@ var logIn = function (requiredFields, bills, data, next) {
 }
 
 // Procedure to extract bill data from the page.
-var parsePage = function (requiredFields, bills, data, next) {
+function parsePage (requiredFields, bills, data, next) {
   let baseDlUrl = 'https://www.bouyguestelecom.fr'
   baseDlUrl += '/parcours/facture/download/index'
   bills.fetched = []
@@ -176,4 +170,12 @@ var parsePage = function (requiredFields, bills, data, next) {
 
   log.info('Bill data parsed.')
   return next()
+}
+
+function customFilterExisting (requiredFields, entries, data, next) {
+  filterExisting(log, Bill)(requiredFields, entries, data, next)
+}
+
+function customSaveDataAndFile (requiredFields, entries, data, next) {
+  saveDataAndFile(log, Bill, 'bouyguesBox', ['facture'])(requiredFields, entries, data, next)
 }
