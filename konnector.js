@@ -20,7 +20,6 @@ const log = require('printit')({
 module.exports = baseKonnector.createNew({
   name: 'Bouygues Box',
   slug: 'bouyguesbox',
-  description: 'A connector to retrieve your Bouygues Box bills and billing data and save them into your Cozy. ',
   vendorLink: 'https://www.bouyguestelecom.fr/',
 
   category: 'telecom',
