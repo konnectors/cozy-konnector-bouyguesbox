@@ -8,19 +8,13 @@ const request = require('request')
 const moment = require('moment')
 const cheerio = require('cheerio')
 
-const {baseKonnector, filterExisting, saveDataAndFile, models} = require('cozy-konnector-libs')
+const {log, baseKonnector, filterExisting, saveDataAndFile, models} = require('cozy-konnector-libs')
 const Bill = models.bill
-
-const log = require('printit')({
-  prefix: 'Bouygues Box',
-  date: true
-})
 
 // Konnector
 module.exports = baseKonnector.createNew({
   name: 'Bouygues Box',
   slug: 'bouyguesbox',
-  description: 'A connector to retrieve your Bouygues Box bills and billing data and save them into your Cozy. ',
   vendorLink: 'https://www.bouyguestelecom.fr/',
 
   category: 'telecom',
@@ -64,11 +58,11 @@ function logIn (requiredFields, bills, data, next) {
     }
   }
 
-  log.info('Logging in on Bouygues Website...')
+  log('info', 'Logging in on Bouygues Website...')
   return request(loginOptions, function (err, res, body) {
     if (err) {
-      log.info('Login infos could not be fetched')
-      log.info(err)
+      log('info', 'Login infos could not be fetched')
+      log('error', err)
       return next('bad credentials')
     }
 
@@ -96,14 +90,14 @@ function logIn (requiredFields, bills, data, next) {
       }
     }
 
-    log.info('Successfully logged in.')
+    log('info', 'Successfully logged in.')
     return request(loginOptions, function (err, res, body) {
       if (err) {
-        log.info(err)
+        log('error', err)
         return next('bad credentials')
       }
 
-      log.info('Download bill HTML page...')
+      log('info', 'Download bill HTML page...')
       // Third request to build the links of the bills
       const options = {
         method: 'GET',
@@ -115,12 +109,12 @@ function logIn (requiredFields, bills, data, next) {
       }
       return request(options, function (err, res, body) {
         if (err) {
-          log.info(err)
+          log('error', err)
           return next('request error')
         }
 
         data.html = body
-        log.info('Bill page downloaded.')
+        log('info', 'Bill page downloaded.')
         return next()
       })
     })
@@ -168,14 +162,14 @@ function parsePage (requiredFields, bills, data, next) {
     return bills.fetched.push(bill)
   })
 
-  log.info('Bill data parsed.')
+  log('info', 'Bill data parsed.')
   return next()
 }
 
 function customFilterExisting (requiredFields, entries, data, next) {
-  filterExisting(log, Bill)(requiredFields, entries, data, next)
+  filterExisting(null, Bill)(requiredFields, entries, data, next)
 }
 
 function customSaveDataAndFile (requiredFields, entries, data, next) {
-  saveDataAndFile(log, Bill, 'bouyguesBox', ['facture'])(requiredFields, entries, data, next)
+  saveDataAndFile(null, Bill, 'bouyguesBox', ['facture'])(requiredFields, entries, data, next)
 }
