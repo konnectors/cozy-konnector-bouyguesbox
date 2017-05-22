@@ -94,7 +94,14 @@ function logIn (requiredFields, bills, data, next) {
     return request(loginOptions, function (err, res, body) {
       if (err) {
         log('error', err)
-        return next('bad credentials')
+        return next('LOGIN_FAILED')
+      }
+
+      // check if an element with class error-icon is present
+      const $ = cheerio.load(body)
+      const badLogin = $('.error-icon').length > 0
+      if (badLogin) {
+        return next('LOGIN_FAILED')
       }
 
       log('info', 'Download bill HTML page...')
