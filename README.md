@@ -110,7 +110,7 @@ git push origin build
 
 And your konnector can now be installed using the following url :
 
-git://github.com/cozy/cozy-konnector-bouyguesbow.git#build
+git://github.com/cozy/cozy-konnector-bouyguesbox.git#build
 
 ### Maintainer
 
