@@ -4,7 +4,7 @@
   "type": "node",
   "slug": "bouyguesbox",
   "description": "Get all the bills from Bouygues Box",
-  "source": "git://github.com/cozy/cozy-konnector-thename.git",
+  "source": "git://github.com/cozy/cozy-konnector-bouyguesbox.git",
   "fields": {
     "save_folder": {
       "doctype": "io.cozy.files",
