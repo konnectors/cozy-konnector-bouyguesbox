@@ -2,7 +2,7 @@
   "version": "0.0.1",
   "name": "Bouygues Box",
   "type": "node",
-  "slug": "konnectorslug",
+  "slug": "bouyguesbox",
   "description": "description",
   "source": "git://github.com/cozy/cozy-konnector-thename.git",
   "fields": {
