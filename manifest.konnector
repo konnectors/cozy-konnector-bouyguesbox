@@ -40,6 +40,10 @@
     }
   },
   "permissions": {
+    "bank operations": {
+      "description": "Required to link bills to bank operations",
+      "type": "io.cozy.bank.operations"
+    },
     "bills": {
       "description": "Required to save the bills data",
       "type": "io.cozy.bills"
