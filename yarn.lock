@@ -413,9 +413,9 @@ cozy-client-js@^0.3.4:
   version "0.3.11"
   resolved "https://registry.yarnpkg.com/cozy-client-js/-/cozy-client-js-0.3.11.tgz#60aa59e56d51af8bae7fcc4929fd51a90a1b8b72"
 
-cozy-konnector-libs@^3.0.0-alpha.16:
-  version "3.0.0-alpha.17"
-  resolved "https://registry.yarnpkg.com/cozy-konnector-libs/-/cozy-konnector-libs-3.0.0-alpha.17.tgz#e6fbd8543935047ba9472fadd56f9ac3a1530931"
+cozy-konnector-libs@^3.0.0-alpha.19:
+  version "3.0.0-alpha.19"
+  resolved "https://registry.yarnpkg.com/cozy-konnector-libs/-/cozy-konnector-libs-3.0.0-alpha.19.tgz#6e330e2addcea3edd30fd4d7bdcd75bca8f79527"
   dependencies:
     bluebird "^3.5.0"
     bluebird-retry "^0.11.0"
@@ -429,6 +429,7 @@ cozy-konnector-libs@^3.0.0-alpha.16:
     request "^2.81.0"
     request-debug "^0.2.0"
     request-promise "^4.2.1"
+    uuid "^3.1.0"
 
 create-ecdh@^4.0.0:
   version "4.0.0"
@@ -2114,7 +2115,7 @@ util@0.10.3, util@^0.10.3:
   dependencies:
     inherits "2.0.1"
 
-uuid@^3.0.0:
+uuid@^3.0.0, uuid@^3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.1.0.tgz#3dd3d3e790abc24d7b0d3a034ffababe28ebbc04"
 
