@@ -2,9 +2,8 @@
   "version": "0.0.1",
   "name": "Bouygues Box",
   "type": "node",
-  "slug": "konnectorslug",
-  "description": "description",
-  "source": "git://github.com/cozy/cozy-konnector-thename.git",
+  "slug": "bouyguesbox",
+  "source": "git://github.com/cozy/cozy-konnector-bouyguesbox.git",
   "fields": {
     "save_folder": {
       "doctype": "io.cozy.files",
@@ -41,6 +40,10 @@
     }
   },
   "permissions": {
+    "bank operations": {
+      "description": "Required to link bills to bank operations",
+      "type": "io.cozy.bank.operations"
+    },
     "bills": {
       "description": "Required to save the bills data",
       "type": "io.cozy.bills"
