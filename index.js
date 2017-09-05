@@ -8085,6 +8085,8 @@ log.namespace = function (namespace) {
 function prodFormat (type, message, label, namespace) {
   // properly display error messages
   if (message.stack) message = message.stack
+  if (message.toString) message = message.toString()
+
   return JSON.stringify({ time: new Date(), type, message, label, namespace })
 }
 

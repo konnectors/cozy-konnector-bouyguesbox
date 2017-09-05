@@ -10,7 +10,7 @@
   "author": "",
   "license": "AGPL-3.0",
   "dependencies": {
-    "cozy-konnector-libs": "^3.0.0-alpha.25",
+    "cozy-konnector-libs": "^3.0.0-alpha.26",
     "moment": "^2.18.1"
   },
   "scripts": {
