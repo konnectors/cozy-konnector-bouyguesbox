@@ -9296,7 +9296,7 @@ const getCozyUrl = function () {
   }
 }
 
-const getCozyClient = function (environment) {
+const getCozyClient = function (environment = 'production') {
   if (environment === 'standalone' || environment === 'test') {
     return __webpack_require__(594)
   }
