@@ -114,7 +114,9 @@ git://github.com/cozy/cozy-konnector-bouyguesbox.git#build
 
 ### Maintainer
 
-The lead maintainers for Bouygues Box Konnector is @doubleface for Cozy Cloud.
+The lead maintainer for Bouygues Box Konnector is @doubleface for Cozy Cloud.
+Before, this konnector was created and maintained by Frank Rousseau. And
+nicofrand contributed to.
 
 
 ### Get in touch
