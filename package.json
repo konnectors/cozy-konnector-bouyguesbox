@@ -18,7 +18,8 @@
     "dev": "cozy-konnector-dev",
     "standalone": "cozy-konnector-standalone",
     "build": "webpack",
-    "deploy": "git-directory-deploy --username Cozy --email contact@cozycloud.cc --directory build/ --repo=https://$GITHUB_TOKEN@github.com/cozy/cozy-konnector-bouyguesbox.git"
+    "deploy": "git-directory-deploy --directory build/ --branch build --repo=https://github.com/cozy/cozy-konnector-bouyguesbox.git",
+    "deploy:travis": "git-directory-deploy --username Cozy --email contact@cozycloud.cc --directory build/ --repo=https://$GITHUB_TOKEN@github.com/cozy/cozy-konnector-bouyguesbox.git"
   },
   "devDependencies": {
     "copy-webpack-plugin": "^4.0.1",
