@@ -91,7 +91,7 @@ function parsePage ($) {
 
     // Amount is in a dirty field. We work on the tag text to extract data.
     let amount = $(this).find('.small-prix').text().trim()
-    amount = amount.replace('€', ',').replace(',', '.')
+    amount = parseFloat(amount.replace('€', ',').replace(',', '.'))
 
     // Get the facture id and build the download url from it.
     const id = $(this).attr('facture-id')
