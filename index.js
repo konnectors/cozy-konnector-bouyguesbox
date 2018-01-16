@@ -101,6 +101,7 @@ function parsePage ($) {
 
     // Build bill object.
     const bill = {
+      vendor: 'Bouygues Box',
       date: date.toDate(),
       amount,
       fileurl,
