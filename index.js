@@ -60,16 +60,18 @@ function logIn (fields) {
     log('info', 'Successfully logged in.')
     const badLogin = $('.error-icon').length > 0
     if (badLogin) {
-      throw new Error('bad login page')
+      throw new Error('LOGIN_FAILED')
+    }
+
+    const $txtindispo = $('.txt-indispo')
+    if ($txtindispo.length) {
+      log('error', $txtindispo.text().trim().replace(/\n/g, ' ').replace(/ */, ' '))
+      throw new Error('VENDOR_DOWN')
     }
   })
   .then(() => {
     log('info', 'Download bill HTML page...')
     return rq(billUrl)
-  })
-  .catch(err => {
-    log('warning', err)
-    throw new Error('LOGIN_FAILED')
   })
 }
 
