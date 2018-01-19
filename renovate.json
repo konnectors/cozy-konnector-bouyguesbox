@@ -1,4 +1,14 @@
 {
+  "packageRules": [
+    {
+      "patch": {
+        "automerge": true
+      },
+      "packagePatterns": [
+        "^cozy-konnector-libs"
+      ]
+    }
+  ],
   "extends": [
     "config:base"
   ]
