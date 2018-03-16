@@ -1,27 +1,28 @@
 language: node_js
-matrix:
-  fast_finish: true
 node_js:
-- '6'
-branches:
-  except:
-  - build
+  - '8'
 env:
   global:
-  - CXX=g++-4.8
-addons:
-  apt:
-    sources:
-    - ubuntu-toolchain-r-test
-    - deadsnakes
-    packages:
-    - g++-4.8
-    - python3.5
+    # kosssi GITHUB_TOKEN
+    # to generate yours : travis encrypt GITHUB_TOKEN=<your_GITHUB_TOKEN>
+    - secure: "kPXn0rZVuhtPzIfk7uYGm4m5gn5cMgF2fpWJJWum58JbtRPb+NOiSdQO/kEI+oDSTzUdz/yJj4FRpgRr2ouRKatceufCWqKAec5ihKtjrodPzf/uMoggRTGEOmGVtFnIjVf4UmWaMOHwcmxgWdeNjfHbO/N17oEcOUEzitSgKm6g0COzJJ1eXV0idigyrpPDBWuJIw5M4V0xHcT+VSoV+w/CR+gsIqREgk81CCZE2fpkt9BrmpfC2mRq8P1JR6HYF+2ym6UxqKFY4pnBuIBT18rmBYbeBT6j6VsnfvosJIoa39iCgdMTFjmpVht0/n3/ltQGJySAKGd616FgLKGgUzYdmMKOq+p+9tkcvU1/sjkacqbCDrQE4D7vTfgs4uxE/ZgUdA1YglBjtDIDBwfyjTZddTRCvefu68IkC5Ek+g2PPaxJ1zeb9wQCxVPqWpwbDcOAQlVZMfpckwSNZb6xt2+Lz9CtArqQT15bpXAvR7wKre6S+i05HzhUqE3v9qhVDcT8ZT9F8PzrJ+LEh6qycbg5rC0fDRVY7E3H+Dx/CttrpE16LBZ8Ros9o7jmG1PlR0dHv2huwx+S6M/xzPWi8/hc7CkFMHVv2q3+dpGQZ7Mfu0beG8aK58js/Fkk52J9E5k3CvXuWMZxK4OMd02Yz1TXbT5BhJBFuz91eg/ETOo="
 cache:
   yarn: true
   directories:
-  - node_modules
+    - node_modules
 script:
-- yarn build
-after_success:
-  - test $TRAVIS_BRANCH = "master" && yarn run deploy:travis -- --branch=build
+  - yarn build
+  - yarn lint
+deploy:
+  - provider: script
+    repo: konnectors/cozy-konnector-bouyguesbox
+    skip-cleanup: true
+    script: yarn deploy
+    on:
+      branch: master
+  - provider: script
+    repo: konnectors/cozy-konnector-bouyguesbox
+    skip-cleanup: true
+    script: yarn deploy:prod
+    on:
+      branch: prod
