@@ -2,7 +2,7 @@
 // In the future, will be set by the stack
 process.env.SENTRY_DSN =
   process.env.SENTRY_DSN ||
-  'https://3da293a66f31422fb395c917a7736405:752fb919797c4082a8a330a452dc6449@sentry.cozycloud.cc/15'
+  'https://0377c20d30914b9288eac18b6d8bbd26:25133595ed4d4e47aa32b4dbfcd89f6b@sentry.cozycloud.cc/22'
 
 const qs = require('querystring')
 const moment = require('moment')
