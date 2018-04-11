@@ -1,42 +1,43 @@
 {
   "version": "0.0.1",
   "name": "Bouygues Box",
-  "type": "node",
-  "slug": "bouyguesbox",
-  "source": "git://github.com/cozy/cozy-konnector-bouyguesbox.git",
+  "slug": "bouyguesbox-collect",
+  "type": "konnector",
+  "language": "node",
+  "icon": "icon.svg",
+  "source": "git://github.com/konnectors/cozy-konnector-bouyguesbox.git",
+  "editor": "Cozy",
+  "vendorLink": "https://www.bouyguestelecom.fr/",
+  "developer": {
+    "name": "Cozy",
+    "url": "https://cozy.io"
+  },
+  "categories": ["isp"],
+  "screenshots": ["screenshots/screenshot.png"],
+  "langs": ["fr"],
+  "dataType": [
+    "bill"
+  ],
   "fields": {
-    "save_folder": {
-      "doctype": "io.cozy.files",
-      "type": "folder"
+    "login": {
+      "type": "text"
     },
-    "account": {
-      "doctype": "io.cozy.accounts",
-      "account_type": "bouygues",
-      "accountFormat": "login,password"
+    "password": {
+      "type": "password"
+    },
+    "advancedFields": {
+      "folderPath": {
+        "advanced": true,
+        "isRequired": false
+      }
     }
   },
   "locales": {
     "fr": {
-      "description": "Récupère toutes vos factures Bouygues Box",
-      "permissions": {
-        "bills": {
-          "description": "Utilisé pour sauvegarder les données de facturation"
-        },
-        "files": {
-          "description": "Utilisé pour sauvegarder les factures"
-        }
-      }
+      "short_description": "Récupère toutes vos factures Bouygues Box"
     },
     "en": {
-      "description": "Retrieves all your Bouygues Box invoices",
-      "permissions": {
-        "bills": {
-          "description": "Used to save billing data"
-        },
-        "files": {
-          "description": "Used to save invoices"
-        }
-      }
+      "short_description": "Retrieves all your Bouygues Box invoices"
     }
   },
   "permissions": {
@@ -57,9 +58,5 @@
       "type": "io.cozy.accounts",
       "verbs": ["GET"]
     }
-  },
-  "developer": {
-    "name": "Olivier “lespacedunmatin” G., adapted from @doubleface work",
-    "url": "https://github.com/lespacedunmatin"
   }
 }

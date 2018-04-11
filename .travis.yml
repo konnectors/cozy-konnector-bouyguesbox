@@ -6,6 +6,8 @@ env:
     # kosssi GITHUB_TOKEN
     # to generate yours : travis encrypt GITHUB_TOKEN=<your_GITHUB_TOKEN>
     - secure: "kPXn0rZVuhtPzIfk7uYGm4m5gn5cMgF2fpWJJWum58JbtRPb+NOiSdQO/kEI+oDSTzUdz/yJj4FRpgRr2ouRKatceufCWqKAec5ihKtjrodPzf/uMoggRTGEOmGVtFnIjVf4UmWaMOHwcmxgWdeNjfHbO/N17oEcOUEzitSgKm6g0COzJJ1eXV0idigyrpPDBWuJIw5M4V0xHcT+VSoV+w/CR+gsIqREgk81CCZE2fpkt9BrmpfC2mRq8P1JR6HYF+2ym6UxqKFY4pnBuIBT18rmBYbeBT6j6VsnfvosJIoa39iCgdMTFjmpVht0/n3/ltQGJySAKGd616FgLKGgUzYdmMKOq+p+9tkcvU1/sjkacqbCDrQE4D7vTfgs4uxE/ZgUdA1YglBjtDIDBwfyjTZddTRCvefu68IkC5Ek+g2PPaxJ1zeb9wQCxVPqWpwbDcOAQlVZMfpckwSNZb6xt2+Lz9CtArqQT15bpXAvR7wKre6S+i05HzhUqE3v9qhVDcT8ZT9F8PzrJ+LEh6qycbg5rC0fDRVY7E3H+Dx/CttrpE16LBZ8Ros9o7jmG1PlR0dHv2huwx+S6M/xzPWi8/hc7CkFMHVv2q3+dpGQZ7Mfu0beG8aK58js/Fkk52J9E5k3CvXuWMZxK4OMd02Yz1TXbT5BhJBFuz91eg/ETOo="
+    # REGISTRY_TOKEN
+    - secure: SvHZmj7uXmu4GLdaR04t4kDDCdaPayRpvrORLB6/lkcI5m+VIWAVir8P4XEJoAVfLcXR36zP8OdMk+aDe4D80ulM0+A3THWoWkareBwQkQUGmDGq3S/xZeM0X+zwNNOk7K0yDZ2VWcAOz7DgUKarpw5zSPngwFjdz0poft7ZX+tosBonVBqQMhTUN2XwHptUFnwJGBaww0E9J96smDFhWyLmoDzP2DKyeWIuW1ktNQ3633kKBsK2El6qQzp/c99ShaFBio5C9HharRV732IkHU2O71kKIzJnHx0A3VQLEqWecZ4cu+N2pTVsxwlW2pEvOJkKrU0jfqwdsyTK4FP5P6Z/c1O8IUsOYjxSVdtJkoyS8DfmFFPX77YOwdyXuLV6owePc8frAFiNnHEx2fLsaDA3V+lM8m+AQ3H1+3dRpLEBgHCjb/JRbo2CjAla+ddJHiuWW/5ivz7sxCN6LJNt9OoLBW4BvSL0NmE7jvDnBQpzbjfOETX1y1mXo96onD0d97mmKV9odmt6gGNdwSSv3GB3k6KIzo5ICoez8PHwD/yfkBRLBiqa+aA0cFtnEBHXIxx3P8JP4SFzR8NjsM0bLcV5ZnVjRj6NvGdh6AIZ2UWGRzjkQysXLXzqxI0L+Fa7jvA41YORBl6HTYIf+H9NhKpWTT1ENLii8/0OLRhZA2U=
   matrix:
     # doubleface account
     # to generate yours : travis encrypt KONNECTOR_CONFIG=\'"`cat konnector-dev-config.json | tr -d '\n'`"\' -r konnectors/cozy-konnector-bouyguesbox
@@ -22,12 +24,12 @@ deploy:
   - provider: script
     repo: konnectors/cozy-konnector-bouyguesbox
     skip-cleanup: true
-    script: yarn deploy
+    script: DEPLOY_BRANCH=build && yarn deploy && yarn cozyPublish
     on:
       branch: master
   - provider: script
     repo: konnectors/cozy-konnector-bouyguesbox
     skip-cleanup: true
-    script: yarn deploy:prod
+    script: DEPLOY_BRANCH=latest && yarn deploy && yarn cozyPublish
     on:
       branch: prod
