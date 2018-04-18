@@ -1,21 +1,21 @@
 {
   "version": "0.0.1",
   "name": "Bouygues Box",
-  "slug": "bouyguesbox-collect",
+  "slug": "bouyguesbox",
   "type": "konnector",
   "language": "node",
   "icon": "icon.svg",
   "source": "git://github.com/konnectors/cozy-konnector-bouyguesbox.git",
   "editor": "Cozy",
-  "vendorLink": "https://www.bouyguestelecom.fr/",
+  "vendor_link": "https://www.bouyguestelecom.fr/",
   "developer": {
     "name": "Cozy",
     "url": "https://cozy.io"
   },
   "categories": ["isp"],
-  "screenshots": ["screenshots/screenshot.png"],
+  "screenshots": [],
   "langs": ["fr"],
-  "dataType": [
+  "data_types": [
     "bill"
   ],
   "fields": {
