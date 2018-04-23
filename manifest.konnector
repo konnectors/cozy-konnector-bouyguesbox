@@ -4,12 +4,12 @@
   "slug": "bouyguesbox",
   "type": "konnector",
   "language": "node",
-  "icon": "icon.svg",
+  "icon": "bouyguesbox.svg",
   "source": "git://github.com/konnectors/cozy-konnector-bouyguesbox.git",
   "editor": "Cozy",
   "vendor_link": "https://www.bouyguestelecom.fr/",
   "developer": {
-    "name": "Cozy",
+    "name": "Cozy Cloud",
     "url": "https://cozy.io"
   },
   "categories": ["isp"],
