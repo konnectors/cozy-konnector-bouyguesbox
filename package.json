@@ -4,7 +4,7 @@
   "description": "",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/connectors/cozy-konnector-bouyguesbox.git"
+    "url": "git+https://github.com/konnectors/cozy-konnector-bouyguesbox.git"
   },
   "keywords": [],
   "author": "Cozy Cloud",
