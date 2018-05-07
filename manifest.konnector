@@ -1,23 +1,14 @@
 {
   "version": "0.0.2",
   "name": "Bouygues Box",
-  "slug": "bouyguesbox",
   "type": "konnector",
   "language": "node",
   "icon": "bouyguesbox.svg",
+  "slug": "bouyguesbox",
   "source": "git://github.com/konnectors/cozy-konnector-bouyguesbox.git",
   "editor": "Cozy",
   "vendor_link": "https://www.bouyguestelecom.fr/",
-  "developer": {
-    "name": "Cozy Cloud",
-    "url": "https://cozy.io"
-  },
   "categories": ["isp"],
-  "screenshots": [],
-  "langs": ["fr"],
-  "data_types": [
-    "bill"
-  ],
   "fields": {
     "login": {
       "type": "text"
@@ -32,31 +23,66 @@
       }
     }
   },
-  "locales": {
-    "fr": {
-      "short_description": "Récupère toutes vos factures Bouygues Box"
-    },
-    "en": {
-      "short_description": "Retrieves all your Bouygues Box invoices"
-    }
-  },
+  "data_types": [
+    "bill"
+  ],
+  "screenshots": [],
   "permissions": {
     "bank operations": {
-      "description": "Required to link bills to bank operations",
       "type": "io.cozy.bank.operations"
     },
     "bills": {
-      "description": "Required to save the bills data",
       "type": "io.cozy.bills"
     },
     "files": {
-      "description": "Required to save the bills",
       "type": "io.cozy.files"
     },
     "accounts": {
-      "description": "Required to get the account's data",
       "type": "io.cozy.accounts",
       "verbs": ["GET"]
+    }
+  },
+  "developer": {
+    "name": "Cozy Cloud",
+    "url": "https://cozy.io"
+  },
+  "langs": ["fr"],
+  "locales": {
+    "fr": {
+      "short_description": "Récupère toutes vos factures Bouygues Box",
+      "long_description": "Récupère toutes vos factures Bouygues Box",
+      "permissions": {
+        "bank operations": {
+          "description": "Utilisé pour relier les factures à des operations bancaires"
+        },
+        "bills": {
+          "description": "Utilisé pour sauver les données des factures"
+        },
+        "files": {
+          "description": "Utilisé pour sauvegarder les factures"
+        },
+        "accounts": {
+          "description": "Utilisé pour obtenir les données du compte"
+        }
+      }
+    },
+    "en": {
+      "short_description": "Retrieves all your Bouygues Box invoices",
+      "long_description": "Retrieves all your Bouygues Box invoices",
+      "permissions": {
+        "bank operations": {
+          "description": "Required to link bank operations to bills"
+        },
+        "bills": {
+          "description": "Required to save the bills data"
+        },
+        "files": {
+          "description": "Required to save the bills"
+        },
+        "accounts": {
+          "description": "Required to get the account's data"
+        }
+      }
     }
   }
 }
