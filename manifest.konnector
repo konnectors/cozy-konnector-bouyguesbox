@@ -1,5 +1,5 @@
 {
-  "version": "0.0.2",
+  "version": "1.0.0",
   "name": "Bouygues Box",
   "type": "konnector",
   "language": "node",
