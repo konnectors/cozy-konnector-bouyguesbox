@@ -11,10 +11,10 @@ const {
   log,
   BaseKonnector,
   saveBills,
-  request
+  requestFactory
 } = require('cozy-konnector-libs')
 
-let rq = request({
+let rq = requestFactory({
   cheerio: true,
   json: false,
   jar: true,
