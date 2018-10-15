@@ -1,5 +1,5 @@
 {
-  "version": "1.0.2",
+  "version": "1.1.0",
   "name": "Bouygues Box",
   "type": "konnector",
   "language": "node",
@@ -85,5 +85,6 @@
       }
     }
   },
-  "banksTransactionRegExp": "\\bbouyg"
+  "banksTransactionRegExp": "\\bbouyg",
+  "manifest_version": "2"
 }
