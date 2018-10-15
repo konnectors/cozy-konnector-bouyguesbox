@@ -85,5 +85,6 @@
       }
     }
   },
-  "banksTransactionRegExp": "\\bbouyg"
+  "banksTransactionRegExp": "\\bbouyg",
+  "manifest_version": "2"
 }
