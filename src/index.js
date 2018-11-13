@@ -59,7 +59,18 @@ async function logIn({ login, password }) {
   await signin({
     url: 'https://www.mon-compte.bouyguestelecom.fr/cas/login',
     formSelector: 'form',
-    formData: { username: login, password }
+    formData: { username: login, password },
+    validate: (statusCode, $) => {
+      if (
+        $.html().includes(
+          'Votre identifiant ou votre mot de passe est incorrect'
+        )
+      ) {
+        return false
+      } else {
+        return true
+      }
+    }
   })
   // Acredite token for downloading file via the API
   const resp = await rq(
