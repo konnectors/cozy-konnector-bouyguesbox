@@ -15,13 +15,11 @@ const {
 } = require('cozy-konnector-libs')
 
 let rq = requestFactory({
-  debug: true,
+  //  debug: true,
   cheerio: false,
   json: true,
   jar: true
 })
-
-let accessToken
 
 module.exports = new BaseKonnector(async function fetch(fields) {
   const baseUrl = 'https://api.bouyguestelecom.fr'
@@ -31,24 +29,29 @@ module.exports = new BaseKonnector(async function fetch(fields) {
   const linkFactures = personnes._links.factures.href
   const comptes = (await rq(`${baseUrl}${linkFactures}`)).comptesFacturation
 
-  const bills = []
   for (let compte of comptes) {
     for (let facture of compte.factures) {
-      // FIXME the failing request
-      // const result = await rq(`${baseUrl}${facture._links.facturePDF.href}`)
-      bills.push({
-        vendor: 'Bouygues Box',
-        date: new Date(facture.dateFacturation),
-        amount: facture.mntTotFacture,
-        fileurl: `${baseUrl}${facture._links.facturePDF.href}`,
-        filename: getFileName(facture.dateFacturation)
-      })
+      // Fetch the facture url to get a json containing the definitive pdf url
+      const result = await rq(`${baseUrl}${facture._links.facturePDF.href}`)
+      const factureUrl = `${baseUrl}${result._actions.telecharger.action}`
+      // Call each time because of quick link expiration (~1min)
+      await saveBills(
+        [
+          {
+            vendor: 'Bouygues Box',
+            date: new Date(facture.dateFacturation),
+            amount: facture.mntTotFacture,
+            fileurl: factureUrl,
+            filename: getFileName(facture.dateFacturation)
+          }
+        ],
+        fields,
+        {
+          identifiers: 'bouyg'
+        }
+      )
     }
   }
-
-  return saveBills(bills, fields, {
-    identifiers: 'bouyg'
-  })
 })
 
 // Procedure to login to Bouygues website.
@@ -58,17 +61,16 @@ async function logIn({ login, password }) {
     formSelector: 'form',
     formData: { username: login, password }
   })
-
+  // Acredite token for downloading file via the API
   const resp = await rq(
-    'https://oauth2.bouyguestelecom.fr/authorize?client_id=ec.nav.bouyguestelecom.fr&response_type=id_token%20token&redirect_uri=https%3A%2F%2Fwww.bouyguestelecom.fr%2Fstatic%2Fhfc%2Fcallback.html&prompt=none',
+    'https://oauth2.bouyguestelecom.fr/authorize?client_id=a360.bouyguestelecom.fr&response_type=id_token%20token&redirect_uri=https%3A%2F%2Fwww.bouyguestelecom.fr%2Fmon-compte%2F',
     {
       resolveWithFullResponse: true
     }
   )
 
   const href = resp.request.uri.href.split('=')
-  accessToken = href[1].split('&')[0]
-
+  const accessToken = href[1].split('&')[0]
   rq = rq.defaults({
     headers: {
       Authorization: `Bearer ${accessToken}`
