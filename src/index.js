@@ -59,6 +59,8 @@ module.exports = new BaseKonnector(async function fetch(fields) {
           }
         )
       }
+      // End of first account fetched, we exit here to limit to 1 account
+      return
     }
   }
 })
