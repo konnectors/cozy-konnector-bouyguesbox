@@ -35,7 +35,7 @@ module.exports = new BaseKonnector(async function fetch(fields) {
   )
 
   for (let compte of comptes.comptesFacturation) {
-    const ligneType = foundLigneType(compte.id, contratsSignes)
+    const ligneType = findLigneType(compte.id, contratsSignes)
     if (ligneType === 'FIXE') {
       for (let facture of compte.factures) {
         log('info', `Fetching ${compte.factures.length} factures`)
@@ -107,7 +107,7 @@ async function logIn({ login, password }) {
   return idPersonne
 }
 
-function foundLigneType(idCompte, contrats) {
+function findLigneType(idCompte, contrats) {
   for (let contrat of contrats.items) {
     if (contrat._links.compteFacturation.href.includes(idCompte)) {
       log('debug', `One 'compteFacturation' detected as ${contrat.typeLigne}`)
