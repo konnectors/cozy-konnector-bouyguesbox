@@ -50,7 +50,12 @@ module.exports = new BaseKonnector(async function fetch(fields) {
               date: new Date(facture.dateFacturation),
               amount: facture.mntTotFacture,
               fileurl: factureUrl,
-              filename: getFileName(facture.dateFacturation)
+              filename: getFileName(facture.dateFacturation),
+              currency: '€',
+              metadata: {
+                importDate: new Date(),
+                version: 1
+              }
             }
           ],
           fields,
