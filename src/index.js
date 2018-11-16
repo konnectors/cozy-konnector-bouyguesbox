@@ -97,7 +97,6 @@ async function logIn({ login, password }) {
       resolveWithFullResponse: true
     }
   )
-
   const href = resp.request.uri.href.split('=')
   const accessToken = href[1].split('&')[0]
   rq = rq.defaults({
@@ -105,7 +104,9 @@ async function logIn({ login, password }) {
       Authorization: `Bearer ${accessToken}`
     }
   })
-  const idPersonne = jwt(href.pop()).id_personne
+  // Better extraction than split because base64 include some =
+  const jwtString = resp.request.uri.href.match(/id_token=(.*)$/)[1]
+  const idPersonne = jwt(jwtString).id_personne
   return idPersonne
 }
 
