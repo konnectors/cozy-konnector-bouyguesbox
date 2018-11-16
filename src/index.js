@@ -37,6 +37,7 @@ module.exports = new BaseKonnector(async function fetch(fields) {
   for (let compte of comptes.comptesFacturation) {
     const ligneType = findLigneType(compte.id, contratsSignes)
     if (ligneType === 'FIXE') {
+      log('debug', `${compte.factures.length} bills found for ${ligneType}`)
       for (let facture of compte.factures) {
         log('info', `Fetching ${compte.factures.length} factures`)
         // Fetch the facture url to get a json containing the definitive pdf url
@@ -88,6 +89,7 @@ async function logIn({ login, password }) {
       }
     }
   })
+  log('debug', `First login succeed, asking for more API rights`)
   // Acredite token for downloading file via the API
   const resp = await rq(
     'https://oauth2.bouyguestelecom.fr/authorize?client_id=a360.bouyguestelecom.fr&response_type=id_token%20token&redirect_uri=https%3A%2F%2Fwww.bouyguestelecom.fr%2Fmon-compte%2F',
