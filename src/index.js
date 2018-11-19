@@ -39,9 +39,14 @@ module.exports = new BaseKonnector(async function fetch(fields) {
     if (ligneType === 'FIXE') {
       log('debug', `${compte.factures.length} bills found for ${ligneType}`)
       for (let facture of compte.factures) {
-        log('info', `Fetching ${compte.factures.length} factures`)
         // Fetch the facture url to get a json containing the definitive pdf url
-        const result = await rq(`${baseUrl}${facture._links.facturePDF.href}`)
+        // If facturePDF is not define, it seems facturePDFDF is ok
+        let result
+        if (facture._links.facturePDF !== undefined) {
+          result = await rq(`${baseUrl}${facture._links.facturePDF.href}`)
+        } else {
+          result = await rq(`${baseUrl}${facture._links.facturePDFDF.href}`)
+        }
         const factureUrl = `${baseUrl}${result._actions.telecharger.action}`
         // Call each time because of quick link expiration (~1min)
         await saveBills(
@@ -97,6 +102,8 @@ async function logIn({ login, password }) {
       resolveWithFullResponse: true
     }
   )
+  log('debug', `Returned http code ${resp.statusCode}`)
+  log('debug', 'Extracting token from request')
   const href = resp.request.uri.href.split('=')
   const accessToken = href[1].split('&')[0]
   rq = rq.defaults({
@@ -105,6 +112,7 @@ async function logIn({ login, password }) {
     }
   })
   // Better extraction than split because base64 include some =
+  log('debug', 'Extracting token from jwt')
   const jwtString = resp.request.uri.href.match(/id_token=(.*)$/)[1]
   const idPersonne = jwt(jwtString).id_personne
   return idPersonne
