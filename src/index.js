@@ -104,18 +104,23 @@ async function logIn({ login, password }) {
   )
   log('debug', `Returned http code ${resp.statusCode}`)
   log('debug', 'Extracting token from request')
-  const href = resp.request.uri.href.split('=')
-  const accessToken = href[1].split('&')[0]
-  rq = rq.defaults({
-    headers: {
-      Authorization: `Bearer ${accessToken}`
-    }
-  })
-  // Better extraction than split because base64 include some =
-  log('debug', 'Extracting token from jwt')
-  const jwtString = resp.request.uri.href.match(/id_token=(.*)$/)[1]
-  const idPersonne = jwt(jwtString).id_personne
-  return idPersonne
+  if (resp.request.uri.href.includes('https://oauth2.bouyguestelecom')) {
+    log('error', 'Api right enhancement failed, redirect to auth')
+    throw 'SEEMS_BLOCKED'
+  } else {
+    const href = resp.request.uri.href.split('=')
+    const accessToken = href[1].split('&')[0]
+    rq = rq.defaults({
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    })
+    // Better extraction than split because base64 include some =
+    log('debug', 'Extracting personne from jsonwebtoken jwt')
+    const jwtString = resp.request.uri.href.match(/id_token=(.*)$/)[1]
+    const idPersonne = jwt(jwtString).id_personne
+    return idPersonne
+  }
 }
 
 function findLigneType(idCompte, contrats) {
