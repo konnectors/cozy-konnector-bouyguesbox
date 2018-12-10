@@ -35,6 +35,17 @@ module.exports = new BaseKonnector(async function fetch(fields) {
     `${baseUrl}/personnes/${idPersonne}/contrats-signes`
   )
 
+  // Try extracting Name of personnes object
+  let name = ''
+  if (fields.lastname) {
+    log('debug', 'Lastname already set, do nothing')
+  } else {
+    log('debug', 'Extracting lastame from website')
+    name = tryNameExtraction(personnes)
+    log('debug', 'Setting lastname in account')
+    setName(name)
+  }
+
   for (let compte of comptes.comptesFacturation) {
     const ligneType = findLigneType(compte.id, contratsSignes)
     if (ligneType === 'FIXE') {
@@ -78,11 +89,11 @@ module.exports = new BaseKonnector(async function fetch(fields) {
 })
 
 // Procedure to login to Bouygues website.
-async function logIn({ login, password }) {
+async function logIn({ login, password, lastname }) {
   await signin({
     url: 'https://www.mon-compte.bouyguestelecom.fr/cas/login',
     formSelector: 'form',
-    formData: { username: login, password },
+    formData: { username: login, password, lastname },
     validate: (statusCode, $) => {
       if (
         $.html().includes(
@@ -107,7 +118,7 @@ async function logIn({ login, password }) {
   log('debug', 'Extracting token from request')
   if (resp.request.uri.href.includes('https://oauth2.bouyguestelecom')) {
     log('error', 'Api right enhancement failed, redirect to auth')
-    throw new Error(errors.VENDOR_DOWN)
+    throw new Error(errors.LOGIN_FAILED.NEEDS_SECRET)
   } else {
     const href = resp.request.uri.href.split('=')
     const accessToken = href[1].split('&')[0]
@@ -138,4 +149,16 @@ function findLigneType(idCompte, contrats) {
 
 function getFileName(date) {
   return `${moment(date).format('YYYYMM')}_bouyguesBox.pdf`
+}
+
+function tryNameExtraction(personnes) {
+  if (personnes.nom.length > 0) {
+    return personnes.nom
+  } else {
+    log('warn', 'Name seems empty, impossible to set')
+  }
+}
+
+function setName(name) {
+  //NOT IMPLEMENTED
 }
