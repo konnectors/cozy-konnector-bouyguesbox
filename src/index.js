@@ -6,7 +6,7 @@ process.env.SENTRY_DSN =
 
 const moment = require('moment')
 const jwt = require('jwt-decode')
-const Client = require('cozy-client-js')
+//const Client = require('cozy-client-js')
 
 const {
   BaseKonnector,
@@ -37,12 +37,11 @@ module.exports = new BaseKonnector(async function fetch(fields) {
   )
 
   // Try extracting Name of personnes object
-  let name = ''
   if (fields.lastname) {
     log('debug', 'Lastname already set, do nothing')
   } else {
     log('debug', 'Extracting lastame from website')
-    name = tryNameExtraction(personnes)
+    const name = tryNameExtraction(personnes)
     log('debug', 'Setting lastname in account')
     setName(name)
   }
@@ -162,4 +161,5 @@ function tryNameExtraction(personnes) {
 
 function setName(name) {
   //NOT IMPLEMENTED
+  log('debug', `First Name char ${name[0]}`)
 }
