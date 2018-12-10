@@ -6,6 +6,7 @@ process.env.SENTRY_DSN =
 
 const moment = require('moment')
 const jwt = require('jwt-decode')
+const Client = require('cozy-client-js')
 
 const {
   BaseKonnector,
