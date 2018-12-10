@@ -18,6 +18,9 @@
     "password": {
       "type": "password"
     },
+    "lastname": {
+      "type": "text"
+    },
     "advancedFields": {
       "folderPath": {
         "advanced": true,
