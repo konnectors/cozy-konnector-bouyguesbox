@@ -35,7 +35,7 @@
   },
   "dependencies": {
     "cozy-client-js": "^0.14.2",
-    "cozy-konnector-libs": "4.11.8",
+    "cozy-konnector-libs": "4.12.1",
     "jwt-decode": "2.2.0",
     "moment": "2.22.2"
   },
