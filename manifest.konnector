@@ -46,8 +46,7 @@
       "type": "io.cozy.accounts",
       "verbs": [
         "GET",
-        "PUT",
-        "DELETE"
+        "PUT"
       ]
     }
   },
