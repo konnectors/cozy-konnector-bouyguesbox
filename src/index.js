@@ -6,7 +6,6 @@ process.env.SENTRY_DSN =
 
 const moment = require('moment')
 const jwt = require('jwt-decode')
-//const Client = require('cozy-client-js')
 
 const {
   BaseKonnector,
@@ -14,7 +13,8 @@ const {
   requestFactory,
   log,
   signin,
-  errors
+  errors,
+  cozyClient
 } = require('cozy-konnector-libs')
 
 let rq = requestFactory({
@@ -25,6 +25,9 @@ let rq = requestFactory({
 })
 
 module.exports = new BaseKonnector(async function fetch(fields) {
+  if (!fields.lastname) {
+    log('debug', 'Name not set, auth could fail trough some IP')
+  }
   const baseUrl = 'https://api.bouyguestelecom.fr'
   const idPersonne = await logIn(fields)
   log('info', 'Login succeed')
@@ -43,7 +46,12 @@ module.exports = new BaseKonnector(async function fetch(fields) {
     log('debug', 'Extracting lastame from website')
     const name = tryNameExtraction(personnes)
     log('debug', 'Setting lastname in account')
-    setName(name)
+    try {
+      setName(name, this.accountId)
+    } catch (e) {
+      log('warn', 'Error when setting account')
+      log('warn', e.msg ? e.msg : e)
+    }
   }
 
   for (let compte of comptes.comptesFacturation) {
@@ -159,7 +167,8 @@ function tryNameExtraction(personnes) {
   }
 }
 
-function setName(name) {
-  //NOT IMPLEMENTED
-  log('debug', `First Name char ${name[0]}`)
+async function setName(name, accountId) {
+  let accountObj = await cozyClient.data.find('io.cozy.accounts', accountId)
+  accountObj.auth.lastname = name
+  await cozyClient.data.update('io.cozy.accounts', accountObj, accountObj)
 }
