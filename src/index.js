@@ -13,7 +13,6 @@ const {
   requestFactory,
   log,
   signin,
-  errors,
   cozyClient
 } = require('cozy-konnector-libs')
 
@@ -126,7 +125,7 @@ async function logIn({ login, password, lastname }) {
   log('debug', 'Extracting token from request')
   if (resp.request.uri.href.includes('https://oauth2.bouyguestelecom')) {
     log('error', 'Api right enhancement failed, redirect to auth')
-    throw new Error(errors.LOGIN_FAILED.NEEDS_SECRET)
+    throw new Error('LOGIN_FAILED.NEEDS_SECRET')
   } else {
     const href = resp.request.uri.href.split('=')
     const accessToken = href[1].split('&')[0]
