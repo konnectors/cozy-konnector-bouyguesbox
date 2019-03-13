@@ -1,16 +1,18 @@
 var path = require('path')
 const CopyPlugin = require('copy-webpack-plugin')
+const webpack = require('webpack')
 const fs = require('fs')
 const SvgoInstance = require('svgo')
 
 const entry = require('./package.json').main
 
+const readManifest = () =>
+  JSON.parse(fs.readFileSync(path.join(__dirname, './manifest.konnector')))
+
 const svgo = new SvgoInstance({
   plugins: [
     {
-      inlineStyles: {
-        onlyMatchedOnce: false
-      }
+      inlineStyles: { onlyMatchedOnce: false }
     }
   ]
 })
@@ -41,7 +43,10 @@ module.exports = {
       { from: 'assets', transform: optimizeSVGIcon },
       { from: '.travis.yml' },
       { from: 'LICENSE' }
-    ])
+    ]),
+    new webpack.DefinePlugin({
+      __WEBPACK_PROVIDED_MANIFEST__: JSON.stringify(readManifest())
+    })
   ],
   module: {
     // to ignore the warnings like :
@@ -49,7 +54,16 @@ module.exports = {
     // Critical dependency: the request of a dependency is an expression
     // Since we cannot change this dependency. I think it won't hide more important messages
     exprContextCritical: false
-  }
+  },
+  externals: [
+    {
+      // pouchdb comes from cozy-client-js and is not used by the connectors
+      pouchdb: 'PouchDB',
+      // If you want to make the built version of the connector lighter and you do not read pdf
+      // files content
+      'pdfjs-dist': 'pdfjs'
+    }
+  ]
 }
 
 function optimizeSVGIcon(buffer, path) {
