@@ -5,7 +5,7 @@
   "language": "node",
   "icon": "bouyguesbox.svg",
   "slug": "bouyguesbox",
-  "source": "git://github.com/konnectors/cozy-konnector-bouyguesbox.git",
+  "source": "git@github.com:konnectors/cozy-konnector-bouyguesbox.git",
   "editor": "Cozy",
   "vendor_link": "https://www.bouyguestelecom.fr/",
   "categories": [
