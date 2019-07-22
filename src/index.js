@@ -16,7 +16,7 @@ const {
   cozyClient
 } = require('cozy-konnector-libs')
 
-let rq = requestFactory({
+const request = requestFactory({
   //  debug: true,
   cheerio: false,
   json: true,
@@ -28,13 +28,19 @@ module.exports = new BaseKonnector(async function fetch(fields) {
     log('debug', 'Name not set, auth could fail trough some IP')
   }
   const baseUrl = 'https://api.bouyguestelecom.fr'
-  const idPersonne = await logIn(fields)
+  const { idPersonne, accessToken } = await logIn(fields)
   log('info', 'Login succeed')
 
-  const personnes = await rq(`${baseUrl}/personnes/${idPersonne}`)
+  const authRequest = request.defaults({
+    headers: {
+      Authorization: `Bearer ${accessToken}`
+    }
+  })
+
+  const personnes = await authRequest(`${baseUrl}/personnes/${idPersonne}`)
   const linkFactures = personnes._links.factures.href
-  const comptes = await rq(`${baseUrl}${linkFactures}`)
-  const contratsSignes = await rq(
+  const comptes = await authRequest(`${baseUrl}${linkFactures}`)
+  const contratsSignes = await authRequest(
     `${baseUrl}/personnes/${idPersonne}/contrats-signes`
   )
 
@@ -62,9 +68,13 @@ module.exports = new BaseKonnector(async function fetch(fields) {
         // If facturePDF is not define, it seems facturePDFDF is ok
         let result
         if (facture._links.facturePDF !== undefined) {
-          result = await rq(`${baseUrl}${facture._links.facturePDF.href}`)
+          result = await authRequest(
+            `${baseUrl}${facture._links.facturePDF.href}`
+          )
         } else {
-          result = await rq(`${baseUrl}${facture._links.facturePDFDF.href}`)
+          result = await authRequest(
+            `${baseUrl}${facture._links.facturePDFDF.href}`
+          )
         }
         const factureUrl = `${baseUrl}${result._actions.telecharger.action}`
         // Call each time because of quick link expiration (~1min)
@@ -85,7 +95,9 @@ module.exports = new BaseKonnector(async function fetch(fields) {
           ],
           fields,
           {
-            identifiers: 'bouyg'
+            identifiers: 'bouyg',
+            sourceAccount: this._account._id,
+            sourceAccountIdentifier: fields.login
           }
         )
       }
@@ -115,7 +127,7 @@ async function logIn({ login, password, lastname }) {
   })
   log('debug', `First login succeed, asking for more API rights`)
   // Acredite token for downloading file via the API
-  const resp = await rq(
+  const resp = await request(
     'https://oauth2.bouyguestelecom.fr/authorize?client_id=a360.bouyguestelecom.fr&response_type=id_token%20token&redirect_uri=https%3A%2F%2Fwww.bouyguestelecom.fr%2Fmon-compte%2F',
     {
       resolveWithFullResponse: true
@@ -129,16 +141,11 @@ async function logIn({ login, password, lastname }) {
   } else {
     const href = resp.request.uri.href.split('=')
     const accessToken = href[1].split('&')[0]
-    rq = rq.defaults({
-      headers: {
-        Authorization: `Bearer ${accessToken}`
-      }
-    })
     // Better extraction than split because base64 include some =
     log('debug', 'Extracting personne from jsonwebtoken jwt')
     const jwtString = resp.request.uri.href.match(/id_token=(.*)$/)[1]
     const idPersonne = jwt(jwtString).id_personne
-    return idPersonne
+    return { idPersonne, accessToken }
   }
 }
 
