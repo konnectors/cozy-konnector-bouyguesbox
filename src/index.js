@@ -9,7 +9,6 @@ const jwt = require('jwt-decode')
 
 const {
   BaseKonnector,
-  saveBills,
   requestFactory,
   log,
   signin,
@@ -78,7 +77,7 @@ module.exports = new BaseKonnector(async function fetch(fields) {
         }
         const factureUrl = `${baseUrl}${result._actions.telecharger.action}`
         // Call each time because of quick link expiration (~1min)
-        await saveBills(
+        await this.saveBills(
           [
             {
               vendor: 'Bouygues Box',
@@ -90,6 +89,20 @@ module.exports = new BaseKonnector(async function fetch(fields) {
               metadata: {
                 importDate: new Date(),
                 version: 1
+              },
+              fileAttributes: {
+                metadata: {
+                  classification: 'invoicing',
+                  datetime: new Date(facture.dateFacturation),
+                  datetimeLabel: 'issueDate',
+                  contentAuthor: 'bouygues',
+                  subClassification: 'invoice',
+                  categories: ['isp'],
+                  issueDate: new Date(facture.dateFacturation),
+                  invoiceNumber: facture.idFacture,
+                  contractReference: compte.id,
+                  isSubscription: true
+                }
               }
             }
           ],
