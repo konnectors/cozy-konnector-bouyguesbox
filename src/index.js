@@ -16,7 +16,7 @@ const {
 } = require('cozy-konnector-libs')
 
 const request = requestFactory({
-  //  debug: true,
+  // debug: true,
   cheerio: false,
   json: true,
   jar: true
@@ -126,6 +126,7 @@ async function logIn({ login, password, lastname }) {
     url: 'https://www.mon-compte.bouyguestelecom.fr/cas/login',
     formSelector: 'form',
     formData: { username: login, password, lastname },
+    simple: false,
     validate: (statusCode, $) => {
       if (
         $.html().includes(
