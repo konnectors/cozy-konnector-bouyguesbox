@@ -109,7 +109,7 @@ module.exports = new BaseKonnector(async function fetch(fields) {
           fields,
           {
             identifiers: 'bouyg',
-            sourceAccount: this._account._id,
+            sourceAccount: this.accountId,
             sourceAccountIdentifier: fields.login
           }
         )
