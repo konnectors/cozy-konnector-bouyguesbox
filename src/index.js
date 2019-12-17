@@ -39,9 +39,12 @@ module.exports = new BaseKonnector(async function fetch(fields) {
   const personnes = await authRequest(`${baseUrl}/personnes/${idPersonne}`)
   const linkFactures = personnes._links.factures.href
   const comptes = await authRequest(`${baseUrl}${linkFactures}`)
+  log('warn', `${comptes.comptesFacturation.length} comptes found`)
+  // Needed to find line type in contract with the ids found in comptes
   const contratsSignes = await authRequest(
     `${baseUrl}/personnes/${idPersonne}/contrats-signes`
   )
+  log('warn', `${contratsSignes.items.length} contracts found`)
 
   // Try extracting Name of personnes object
   if (fields.lastname) {
@@ -115,8 +118,12 @@ module.exports = new BaseKonnector(async function fetch(fields) {
         )
       }
       // End of first account fetched, we exit here to limit to 1 account
-      return
+      break
     }
+  }
+  // Evalutate all comptes type
+  for (let compte of comptes.comptesFacturation) {
+    findLigneType(compte.id, contratsSignes)
   }
 })
 
@@ -167,11 +174,15 @@ function findLigneType(idCompte, contrats) {
   for (let contrat of contrats.items) {
     if (contrat._links.compteFacturation.href.includes(idCompte)) {
       log('debug', `One 'compteFacturation' detected as ${contrat.typeLigne}`)
-      // Return type found : FIXE or MOBILE
+      // LigneType known : FIXE or MOBILE
+      if (contrat.typeLigne != 'FIXE' && contrat.typeLigne != 'MOBILE') {
+        log('warn', `Unknown LigneType ${contrat.typeLigne}`)
+      }
       return contrat.typeLigne
     }
   }
   // Else not found at all
+  log('warn', 'LigneType not detected')
   return undefined
 }
 
