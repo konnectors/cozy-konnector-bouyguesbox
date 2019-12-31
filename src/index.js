@@ -40,6 +40,16 @@ module.exports = new BaseKonnector(async function fetch(fields) {
   const linkFactures = personnes._links.factures.href
   const comptes = await authRequest(`${baseUrl}${linkFactures}`)
   log('warn', `${comptes.comptesFacturation.length} comptes found`)
+  let comptesWithBills = 0
+  for (const compte of comptes.comptesFacturation) {
+    if (compte.factures.length > 0) {
+      comptesWithBills += 1
+    }
+  }
+  log('warn', `${comptesWithBills} comptes with bills`)
+  if (comptesWithBills > 1) {
+    log('warn', 'MultiContrats')
+  }
   // Needed to find line type in contract with the ids found in comptes
   const contratsSignes = await authRequest(
     `${baseUrl}/personnes/${idPersonne}/contrats-signes`
