@@ -12,7 +12,8 @@ const {
   requestFactory,
   log,
   signin,
-  cozyClient
+  cozyClient,
+  utils
 } = require('cozy-konnector-libs')
 
 const request = requestFactory({
@@ -39,22 +40,10 @@ module.exports = new BaseKonnector(async function fetch(fields) {
   const personnes = await authRequest(`${baseUrl}/personnes/${idPersonne}`)
   const linkFactures = personnes._links.factures.href
   const comptes = await authRequest(`${baseUrl}${linkFactures}`)
-  log('warn', `${comptes.comptesFacturation.length} comptes found`)
-  let comptesWithBills = 0
-  for (const compte of comptes.comptesFacturation) {
-    if (compte.factures.length > 0) {
-      comptesWithBills += 1
-    }
-  }
-  log('warn', `${comptesWithBills} comptes with bills`)
-  if (comptesWithBills > 1) {
-    log('warn', 'MultiContrats')
-  }
-  // Needed to find line type in contract with the ids found in comptes
-  const contratsSignes = await authRequest(
-    `${baseUrl}/personnes/${idPersonne}/contrats-signes`
+  log(
+    'info',
+    `${comptes.comptesFacturation.length} comptes found, maybe some are empties`
   )
-  log('warn', `${contratsSignes.items.length} contracts found`)
 
   // Try extracting Name of personnes object
   if (fields.lastname) {
@@ -71,69 +60,69 @@ module.exports = new BaseKonnector(async function fetch(fields) {
     }
   }
 
+  const prefixListOfImportedFiles = []
   for (let compte of comptes.comptesFacturation) {
-    const ligneType = findLigneType(compte.id, contratsSignes)
-    if (ligneType === 'FIXE') {
-      log('debug', `${compte.factures.length} bills found for ${ligneType}`)
-      for (let facture of compte.factures) {
-        // Fetch the facture url to get a json containing the definitive pdf url
-        // If facturePDF is not define, it seems facturePDFDF is ok
-        let result
-        if (facture._links.facturePDF !== undefined) {
-          result = await authRequest(
-            `${baseUrl}${facture._links.facturePDF.href}`
-          )
-        } else {
-          result = await authRequest(
-            `${baseUrl}${facture._links.facturePDFDF.href}`
-          )
-        }
-        const factureUrl = `${baseUrl}${result._actions.telecharger.action}`
-        // Call each time because of quick link expiration (~1min)
-        await this.saveBills(
-          [
-            {
-              vendor: 'Bouygues Box',
-              date: new Date(facture.dateFacturation),
-              amount: facture.mntTotFacture,
-              fileurl: factureUrl,
-              filename: getFileName(facture.dateFacturation),
-              currency: '€',
-              metadata: {
-                importDate: new Date(),
-                version: 1
-              },
-              fileAttributes: {
-                metadata: {
-                  classification: 'invoicing',
-                  datetime: new Date(facture.dateFacturation),
-                  datetimeLabel: 'issueDate',
-                  contentAuthor: 'bouygues',
-                  subClassification: 'invoice',
-                  categories: ['isp'],
-                  issueDate: new Date(facture.dateFacturation),
-                  invoiceNumber: facture.idFacture,
-                  contractReference: compte.id,
-                  isSubscription: true
-                }
-              }
-            }
-          ],
-          fields,
-          {
-            identifiers: 'bouyg',
-            sourceAccount: this.accountId,
-            sourceAccountIdentifier: fields.login
-          }
+    // Some compteFacturation are empty of 'factures'
+    for (let facture of compte.factures) {
+      // Fetch the facture url to get a json containing the definitive pdf url
+      // If facturePDF is not define, it seems facturePDFDF is ok
+      let result
+      if (facture._links.facturePDF !== undefined) {
+        result = await authRequest(
+          `${baseUrl}${facture._links.facturePDF.href}`
+        )
+      } else {
+        result = await authRequest(
+          `${baseUrl}${facture._links.facturePDFDF.href}`
         )
       }
-      // End of first account fetched, we exit here to limit to 1 account
-      break
+      const factureUrl = `${baseUrl}${result._actions.telecharger.action}`
+      // Call each time because of quick link expiration (~1min)
+      prefixListOfImportedFiles.push(
+        moment(facture.dateFacturation).format('YYYYMM') + '_'
+      )
+      await this.saveBills(
+        [
+          {
+            vendor: 'Bouygues',
+            date: new Date(facture.dateFacturation),
+            amount: facture.mntTotFacture,
+            vendorRef: facture.idFacture,
+            fileurl: factureUrl,
+            filename: getFileName(
+              facture.dateFacturation,
+              facture.mntTotFacture,
+              facture.idFacture
+            ),
+            currency: '€',
+            fileAttributes: {
+              metadata: {
+                classification: 'invoicing',
+                datetime: new Date(facture.dateFacturation),
+                datetimeLabel: 'issueDate',
+                contentAuthor: 'bouygues',
+                subClassification: 'invoice',
+                categories: ['phone'],
+                issueDate: new Date(facture.dateFacturation),
+                invoiceNumber: facture.idFacture,
+                contractReference: compte.id,
+                isSubscription: true
+              }
+            }
+          }
+        ],
+        fields,
+        {
+          sourceAccount: this.accountId,
+          sourceAccountIdentifier: fields.login,
+          fileIdAttributes: ['vendorRef'],
+          keys: ['vendorRef'],
+          linkBankOperations: false
+        }
+      )
     }
-  }
-  // Evalutate all comptes type
-  for (let compte of comptes.comptesFacturation) {
-    findLigneType(compte.id, contratsSignes)
+    // Clean old files
+    await cleanOldFiles(prefixListOfImportedFiles, fields)
   }
 })
 
@@ -180,24 +169,10 @@ async function logIn({ login, password, lastname }) {
   }
 }
 
-function findLigneType(idCompte, contrats) {
-  for (let contrat of contrats.items) {
-    if (contrat._links.compteFacturation.href.includes(idCompte)) {
-      log('debug', `One 'compteFacturation' detected as ${contrat.typeLigne}`)
-      // LigneType known : FIXE or MOBILE
-      if (contrat.typeLigne != 'FIXE' && contrat.typeLigne != 'MOBILE') {
-        log('warn', `Unknown LigneType ${contrat.typeLigne}`)
-      }
-      return contrat.typeLigne
-    }
-  }
-  // Else not found at all
-  log('warn', 'LigneType not detected')
-  return undefined
-}
-
-function getFileName(date) {
-  return `${moment(date).format('YYYYMM')}_bouyguesBox.pdf`
+function getFileName(date, amount, factureId) {
+  return `${moment(date).format('YYYYMM')}_bouygues_${amount.toFixed(
+    2
+  )}€_${factureId}.pdf`
 }
 
 function tryNameExtraction(personnes) {
@@ -212,4 +187,46 @@ async function setName(name, accountId) {
   let accountObj = await cozyClient.data.find('io.cozy.accounts', accountId)
   accountObj.auth.lastname = name
   await cozyClient.data.update('io.cozy.accounts', accountObj, accountObj)
+}
+
+async function cleanOldFiles(prefixList, fields) {
+  let billsToDelete = []
+  const parentDir = await cozyClient.files.statByPath(fields.folderPath)
+  const filesAndDirList = await utils.queryAll('io.cozy.files', {
+    dir_id: parentDir._id
+  })
+  const filesList = filesAndDirList.filter(file => file.type === 'file')
+  const bills = await utils.queryAll('io.cozy.bills', {
+    vendor: 'Bouygues Box'
+  })
+
+  for (const file of filesList) {
+    const prefix = file.name.slice(0, 7) // Is something like 201901_
+    // Prefix is found and a special string is present, it's an old file
+    // that's haven't been rename or move by the user
+    if (
+      prefixList.includes(prefix) &&
+      (file.name.includes('bouyguesBox') ||
+        file.name.includes('bouyguestelecom'))
+    ) {
+      await cozyClient.files.trashById(file._id)
+      const bill = isABillMatch(file, bills)
+      if (bill) {
+        billsToDelete.push(bill)
+      }
+    }
+  }
+  // Deleting all necessary bills at once
+  await utils.batchDelete('io.cozy.bills', billsToDelete)
+}
+
+/* Return the first bill matching the file passed
+ */
+function isABillMatch(file, bills) {
+  for (const bill of bills) {
+    if (bill.invoice === `io.cozy.files:${file._id}`) {
+      return bill
+    }
+  }
+  return false
 }
