@@ -85,6 +85,7 @@ module.exports = new BaseKonnector(async function fetch(fields) {
           {
             vendor: 'Bouygues',
             date: new Date(facture.dateFacturation),
+            recurrence: 'monthly',
             amount: facture.mntTotFacture,
             vendorRef: facture.idFacture,
             fileurl: factureUrl,
