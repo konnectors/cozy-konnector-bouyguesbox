@@ -11,6 +11,12 @@
   "categories": [
     "isp"
   ],
+  "langs": [
+    "fr"
+  ],
+  "data_types": [
+    "bill"
+  ],
   "fields": {
     "login": {
       "type": "text"
@@ -28,10 +34,6 @@
       }
     }
   },
-  "data_types": [
-    "bill"
-  ],
-  "screenshots": [],
   "permissions": {
     "bank operations": {
       "type": "io.cozy.bank.operations"
@@ -54,9 +56,6 @@
     "name": "Cozy Cloud",
     "url": "https://cozy.io"
   },
-  "langs": [
-    "fr"
-  ],
   "locales": {
     "fr": {
       "short_description": "Récupère toutes vos factures Bouygues Box",
