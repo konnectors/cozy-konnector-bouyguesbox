@@ -12,8 +12,7 @@ const {
   requestFactory,
   log,
   signin,
-  cozyClient,
-  utils
+  cozyClient
 } = require('cozy-konnector-libs')
 
 const request = requestFactory({
@@ -121,8 +120,6 @@ module.exports = new BaseKonnector(async function fetch(fields) {
         }
       )
     }
-    // Clean old files
-    await cleanOldFiles(prefixListOfImportedFiles, fields)
   }
 })
 
@@ -187,46 +184,4 @@ async function setName(name, accountId) {
   let accountObj = await cozyClient.data.find('io.cozy.accounts', accountId)
   accountObj.auth.lastname = name
   await cozyClient.data.update('io.cozy.accounts', accountObj, accountObj)
-}
-
-async function cleanOldFiles(prefixList, fields) {
-  let billsToDelete = []
-  const parentDir = await cozyClient.files.statByPath(fields.folderPath)
-  const filesAndDirList = await utils.queryAll('io.cozy.files', {
-    dir_id: parentDir._id
-  })
-  const filesList = filesAndDirList.filter(file => file.type === 'file')
-  const bills = await utils.queryAll('io.cozy.bills', {
-    vendor: 'Bouygues Box'
-  })
-
-  for (const file of filesList) {
-    const prefix = file.name.slice(0, 7) // Is something like 201901_
-    // Prefix is found and a special string is present, it's an old file
-    // that's haven't been rename or move by the user
-    if (
-      prefixList.includes(prefix) &&
-      (file.name.includes('bouyguesBox') ||
-        file.name.includes('bouyguestelecom'))
-    ) {
-      await cozyClient.files.trashById(file._id)
-      const bill = isABillMatch(file, bills)
-      if (bill) {
-        billsToDelete.push(bill)
-      }
-    }
-  }
-  // Deleting all necessary bills at once
-  await utils.batchDelete('io.cozy.bills', billsToDelete)
-}
-
-/* Return the first bill matching the file passed
- */
-function isABillMatch(file, bills) {
-  for (const bill of bills) {
-    if (bill.invoice === `io.cozy.files:${file._id}`) {
-      return bill
-    }
-  }
-  return false
 }
