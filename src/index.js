@@ -1,5 +1,3 @@
-// Force sentry DSN into environment variables
-// In the future, will be set by the stack
 process.env.SENTRY_DSN =
   process.env.SENTRY_DSN ||
   'https://0377c20d30914b9288eac18b6d8bbd26:25133595ed4d4e47aa32b4dbfcd89f6b@sentry.cozycloud.cc/22'
@@ -11,7 +9,6 @@ const {
   BaseKonnector,
   requestFactory,
   log,
-  signin,
   cozyClient
 } = require('cozy-konnector-libs')
 
@@ -27,7 +24,7 @@ module.exports = new BaseKonnector(async function fetch(fields) {
     log('debug', 'Name not set, auth could fail trough some IP')
   }
   const baseUrl = 'https://api.bouyguestelecom.fr'
-  const { idPersonne, accessToken } = await logIn(fields)
+  const { idPersonne, accessToken } = await logIn.bind(this)(fields)
   log('info', 'Login succeed')
 
   const authRequest = request.defaults({
@@ -63,6 +60,9 @@ module.exports = new BaseKonnector(async function fetch(fields) {
   for (let compte of comptes.comptesFacturation) {
     // Some compteFacturation are empty of 'factures'
     for (let facture of compte.factures) {
+      // ignore those bills which are not downloadable anymore
+      if (facture.soldeFacturePrec === undefined) continue
+
       // Fetch the facture url to get a json containing the definitive pdf url
       // If facturePDF is not define, it seems facturePDFDF is ok
       let result
@@ -124,7 +124,7 @@ module.exports = new BaseKonnector(async function fetch(fields) {
 
 // Procedure to login to Bouygues website.
 async function logIn({ login, password, lastname }) {
-  await signin({
+  await this.signin({
     url: 'https://www.mon-compte.bouyguestelecom.fr/cas/login',
     formSelector: 'form',
     formData: { username: login, password, lastname },
