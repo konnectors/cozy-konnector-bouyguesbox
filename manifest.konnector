@@ -34,6 +34,10 @@
       }
     }
   },
+  "time_interval": [
+    0,
+    24
+  ],
   "permissions": {
     "bank operations": {
       "type": "io.cozy.bank.operations"
@@ -94,6 +98,10 @@
       }
     }
   },
+  "features": [
+    "LOGIN_OK",
+    "METADATA_DEDUP"
+  ],
   "banksTransactionRegExp": "\\bbouyg",
   "manifest_version": "2"
 }
