@@ -125,7 +125,13 @@ module.exports = new BaseKonnector(async function fetch(fields) {
         {
           fileIdAttributes: ['vendorRef'],
           keys: ['vendorRef'],
-          linkBankOperations: false
+          linkBankOperations: false,
+          shouldReplaceFile: (file, entry) => {
+            return (
+              entry.fileAttributes.metadata.categories.sort().join() !==
+              file.attributes.metadata.categories.sort().join()
+            )
+          }
         }
       )
     }
