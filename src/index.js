@@ -102,7 +102,7 @@ module.exports = new BaseKonnector(async function fetch(fields) {
                 datetimeLabel: 'issueDate',
                 contentAuthor: 'bouygues',
                 subClassification: 'invoice',
-                categories: ['phone'],
+                categories: ['isp'],
                 issueDate: new Date(facture.dateFacturation),
                 invoiceNumber: facture.idFacture,
                 contractReference: compte.id,
