@@ -100,7 +100,8 @@
   },
   "features": [
     "LOGIN_OK",
-    "METADATA_DEDUP"
+    "METADATA_DEDUP",
+    "DOC_QUALIFICATION"
   ],
   "banksTransactionRegExp": "\\bbouyg",
   "manifest_version": "2"
