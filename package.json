@@ -28,7 +28,6 @@
     "dev": "cozy-konnector-dev",
     "standalone": "cozy-konnector-standalone",
     "pretest": "npm run clean",
-    "check": "konitor check .",
     "clean": "rm -rf ./data",
     "build": "webpack",
     "lint": "eslint --fix .",
@@ -37,19 +36,12 @@
     "travisDeployKey": "./bin/generate_travis_deploy_key"
   },
   "dependencies": {
-    "cozy-konnector-libs": "4.35.0",
+    "cozy-konnector-libs": "4.37.1",
     "jwt-decode": "3.1.0",
     "moment": "2.29.1"
   },
   "devDependencies": {
-    "copy-webpack-plugin": "6.3.0",
-    "cozy-app-publish": "0.25.0",
-    "cozy-jobs-cli": "1.13.7",
-    "eslint-config-cozy-app": "2.0.0",
-    "git-directory-deploy": "1.5.1",
-    "husky": "4.3.0",
-    "svgo": "1.3.2",
-    "webpack": "4.44.1",
-    "webpack-cli": "3.3.12"
+    "cozy-jobs-cli": "1.15.1",
+    "cozy-konnector-build": "1.1.1"
   }
 }
