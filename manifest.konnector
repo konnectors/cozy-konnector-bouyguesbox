@@ -48,6 +48,9 @@
     "files": {
       "type": "io.cozy.files"
     },
+    "carbon_copy": {
+      "type": "io.cozy.certified.carbon_copy"
+    },
     "accounts": {
       "type": "io.cozy.accounts",
       "verbs": [
@@ -65,6 +68,9 @@
       "short_description": "Récupère toutes vos factures Bouygues Box",
       "long_description": "Bouygues est une société française de télécommunication accessible sur [https://www.bouyguestelecom.fr/](www.bouyguestelecom.fr)\n\n**Connectez votre compte Bouygues à votre Cozy pour récupérer**\n\n- toutes vos factures\n\n**Accédez directement à vos documents dans votre Drive personnel**\n\nEn connectant votre compte Bouygues, votre Cozy crée automatiquement un dossier dans **Drive >\nAdministratif > Bouygues**. Vos factures sont à portée de main et toujours accessibles !\n\n**Suivez le montant de vos factures avec Banks**\n\nLes factures récupérées sont automatiquement liées aux opérations bancaires Bouygues associées à votre compte si vous utilisez l’application Banks. Finis les maux de tête à faire les comptes !\n\n**Sauvegardez vos identifiants avec Pass**\n\nEn installant le gestionnaire de mots de passe, vos identifiants sont sauvegardés une bonne fois\npour toutes pour vous faciliter la connexion au site de Bouygues. Adieu les mots de passe oubliés !\n\n**Configuration**\n\nPour connecter votre compte, il vous suffit de renseigner dans les champs :\n\n- votre login\n- votre mot de passe\n\nUne fois connecté, votre Cozy se connectera régulièrement à votre compte Bouygues pour récupérer les\nnouveaux éléments et les historiser dans un dossier Bouygues dans Drive.\n\nSi vous déconnectez votre compte Bouygues, les informations déjà sauvegardées dans votre Cozy restent disponibles. Vous pouvez les supprimer manuellement par ailleurs.",
       "permissions": {
+        "carboncopy": {
+          "description": "Utilisé pour certifier vos fichier copie conforme avec les documents d'origine"
+        },
         "bank operations": {
           "description": "Utilisé pour relier les factures à des operations bancaires"
         },
@@ -86,6 +92,9 @@
         "bank operations": {
           "description": "Required to link bank operations to bills"
         },
+        "carboncopy": {
+          "description": "Required for carbon copy documents"
+        },
         "bills": {
           "description": "Required to save the bills data"
         },
@@ -101,7 +110,8 @@
   "features": [
     "LOGIN_OK",
     "METADATA_DEDUP",
-    "DOC_QUALIFICATION"
+    "DOC_QUALIFICATION",
+    "CARBON_COPY"
   ],
   "banksTransactionRegExp": "\\bbouyg",
   "manifest_version": "2"
