@@ -9,14 +9,14 @@ const {
   BaseKonnector,
   requestFactory,
   log,
-  cozyClient,
+  cozyClient
 } = require('cozy-konnector-libs')
 
 const request = requestFactory({
   // debug: true,
   cheerio: false,
   json: true,
-  jar: true,
+  jar: true
 })
 
 const get = require('lodash/get')
@@ -31,8 +31,8 @@ module.exports = new BaseKonnector(async function fetch(fields) {
 
   const authRequest = request.defaults({
     headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
+      Authorization: `Bearer ${accessToken}`
+    }
   })
 
   const personnes = await authRequest(`${baseUrl}/personnes/${idPersonne}`)
@@ -82,11 +82,11 @@ module.exports = new BaseKonnector(async function fetch(fields) {
       prefixListOfImportedFiles.push(
         moment(facture.dateFacturation).format('YYYYMM') + '_'
       )
-      const isMobile = facture.lignes.some((val) =>
+      const isMobile = facture.lignes.some(val =>
         ['06', '07'].includes(val.numeroLigne.substr(0, 2))
       )
       const isIsp = facture.lignes.some(
-        (val) => !['06', '07'].includes(val.numeroLigne.substr(0, 2))
+        val => !['06', '07'].includes(val.numeroLigne.substr(0, 2))
       )
       const categories = []
       // some bills are related to isp and phone
@@ -119,10 +119,10 @@ module.exports = new BaseKonnector(async function fetch(fields) {
                 issueDate: new Date(facture.dateFacturation),
                 invoiceNumber: facture.idFacture,
                 contractReference: compte.id,
-                isSubscription: true,
-              },
-            },
-          },
+                isSubscription: true
+              }
+            }
+          }
         ],
         fields,
         {
@@ -133,9 +133,12 @@ module.exports = new BaseKonnector(async function fetch(fields) {
             return (
               get(entry, 'fileAttributes.metadata.categories', [])
                 .sort()
-                .join() !== get(file, 'metadata.categories', []).sort().join()
+                .join() !==
+              get(file, 'metadata.categories', [])
+                .sort()
+                .join()
             )
-          },
+          }
         }
       )
     }
@@ -159,14 +162,14 @@ async function logIn({ login, password, lastname }) {
       } else {
         return true
       }
-    },
+    }
   })
   log('debug', `First login succeed, asking for more API rights`)
   // Acredite token for downloading file via the API
   const resp = await request(
     'https://oauth2.bouyguestelecom.fr/authorize?client_id=a360.bouyguestelecom.fr&response_type=id_token%20token&redirect_uri=https%3A%2F%2Fwww.bouyguestelecom.fr%2Fmon-compte%2F',
     {
-      resolveWithFullResponse: true,
+      resolveWithFullResponse: true
     }
   )
   log('debug', `Returned http code ${resp.statusCode}`)
