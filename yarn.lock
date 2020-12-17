@@ -1116,10 +1116,10 @@ cozy-doctypes@^1.75.1:
     lodash "4.17.19"
     prop-types "^15.7.2"
 
-cozy-jobs-cli@1.15.2, cozy-jobs-cli@^1.15.2:
-  version "1.15.2"
-  resolved "https://registry.yarnpkg.com/cozy-jobs-cli/-/cozy-jobs-cli-1.15.2.tgz#b54e5f49db9df50f9abfce925461b0775a505e29"
-  integrity sha512-9GKT2wdaXrYAzew/TwDp4be3TgliCsaFvAtDhz8pk4/KkPIogUv/oH+B/IKvs46Ck18TLARx4A98BQMmNR2ROA==
+cozy-jobs-cli@1.15.3, cozy-jobs-cli@^1.15.3:
+  version "1.15.3"
+  resolved "https://registry.yarnpkg.com/cozy-jobs-cli/-/cozy-jobs-cli-1.15.3.tgz#d3a923922114846d1519ee234869a0874f11b53f"
+  integrity sha512-CnBLJE7axWctdApgmSgWZstSBG5zdG5sBJQF18KVYyiZP7TVw7zmJkIuuJoHWbCXoGYNt9LYosLhXCAIsUVmKg==
   dependencies:
     "@pollyjs/adapter-node-http" "5.1.0"
     "@pollyjs/core" "5.1.0"
@@ -1129,20 +1129,20 @@ cozy-jobs-cli@1.15.2, cozy-jobs-cli@^1.15.2:
     cli-highlight "2.1.9"
     commander "6.2.1"
     cozy-client "16.10.0"
-    cozy-konnector-libs "^4.37.2"
+    cozy-konnector-libs "^4.38.0"
     cozy-logger "1.6.0"
     open "7.3.0"
     pretty "2.0.0"
     strip-json-comments "3.1.1"
 
-cozy-konnector-build@1.1.2:
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/cozy-konnector-build/-/cozy-konnector-build-1.1.2.tgz#cf9d24b6542661ac72b8162f38d7937adcc8cb1a"
-  integrity sha512-CO+oLwOtaZIsRzI3TBfGjRNLTiMxXu0AvAQBLQZhlI++ntEHFGfwRZQf9DlyLF8w+MQqJDgkL1whlIhtOtg81g==
+cozy-konnector-build@1.1.3:
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/cozy-konnector-build/-/cozy-konnector-build-1.1.3.tgz#b503cdbc46e486431a9d113fe2c3341da3cc015a"
+  integrity sha512-8RH9GCuYOIlftnw/dnYkSMbshcwZGBOCSM8o4iyP5FdM2mH4UmzkKgy/qoauboJ2FksawVXt45Ioyx7rzmfJdg==
   dependencies:
     copy-webpack-plugin "7.0.0"
     cozy-app-publish "0.26.0"
-    cozy-jobs-cli "^1.15.2"
+    cozy-jobs-cli "^1.15.3"
     eslint-config-cozy-app "2.0.0"
     git-directory-deploy "1.5.1"
     husky "4.3.6"
@@ -1150,10 +1150,10 @@ cozy-konnector-build@1.1.2:
     webpack "5.10.3"
     webpack-cli "4.2.0"
 
-cozy-konnector-libs@4.37.2, cozy-konnector-libs@^4.37.2:
-  version "4.37.2"
-  resolved "https://registry.yarnpkg.com/cozy-konnector-libs/-/cozy-konnector-libs-4.37.2.tgz#0750444329a4c8392034076af3319d47403f5071"
-  integrity sha512-QhjiYCAI3HHe5gGe/O7jtZi+4Rncyo1pIEKfdRshCfybjz5kM7pGoNuGu5Oq3Vr35gyZhVKh4uz/q2fsH5u0ug==
+cozy-konnector-libs@4.38.0, cozy-konnector-libs@^4.38.0:
+  version "4.38.0"
+  resolved "https://registry.yarnpkg.com/cozy-konnector-libs/-/cozy-konnector-libs-4.38.0.tgz#26f85e01ca22007ebdf32c4edbc8f82efc491b08"
+  integrity sha512-cpZv7cB9AWbwsToDYVJekp0jEbvXpHaXUMebvx5MubJ7ANkOBehtSg/2qamegAQd+zwi87U1J9bWenjclKj8gA==
   dependencies:
     babel-runtime "^6.26.0"
     bluebird "^3.7.2"
