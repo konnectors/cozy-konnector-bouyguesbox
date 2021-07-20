@@ -110,7 +110,7 @@
   "features": [
     "LOGIN_OK",
     "METADATA_DEDUP",
-    "DOC_QUALIFICATION",
+    "DOC_QUALIFICATION_V2",
     "CARBON_COPY"
   ],
   "banksTransactionRegExp": "\\bbouyg",
